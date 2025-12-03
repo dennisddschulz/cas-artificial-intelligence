@@ -73,6 +73,14 @@ Wir liefern eine gemeinsames `environment.yml` für alle Plattforme.
 
 ---
 
+
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+chmod +x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh
+
+# conda config --set proxy_servers.https https://isc-den:Sommer\!500@proxy.infet.ejpd.admin.ch:8080
+conda config --set ssl_verify false
+
 ## 3.2 Installation
 ```bash
 conda env create -f environment.yml
@@ -86,7 +94,8 @@ python -m ipykernel install --user --name=tft_env
 
 ## 4.1 Daten laden (z. B. SPY)
 ```bash
-python src/main.py --download SPY
+# python src/main.py --download SPY
+python -m src.main --download SPY
 ```
 
 ## 4.2 Vollen TFT-Experimentlauf starten
