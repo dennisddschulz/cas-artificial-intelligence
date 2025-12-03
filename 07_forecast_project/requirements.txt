@@ -1,0 +1,6 @@
+darts>=0.30.0
+pandas
+numpy
+matplotlib
+torch
+yfinance

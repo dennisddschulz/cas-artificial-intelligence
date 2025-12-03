@@ -1,0 +1,17 @@
+name: tft_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - torch
+      - torchvision
+      - torchaudio
+      - darts[u]
+      - numpy==1.26.4
+      - pandas
+      - matplotlib
+      - yfinance
+      - jupyterlab
+      - ipykernel
