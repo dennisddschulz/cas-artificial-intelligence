@@ -246,7 +246,62 @@ Beispiele für aktuelle, in Darts verfügbare SOTA-Modelle::
 >Hinweis für Studierende:
 Mindestens ein dieser Modelle muss im Rahmen der Projektarbeit in `models_foundation.py` implementiert, trainiert und mit TFT verglichen werden.
 
-# 12. Evaluationsfluss für Studierende
+# 12. Foundation-Modelle (DLinear / NLinear) – Aktivierung & Nutzung
+
+Ab sofort ist ein schneller Vergleich mit linearen SOTA‑Modellen möglich: **DLinear** und **NLinear** (aus Darts).
+
+## 12.1 Aktivieren und konfigurieren
+
+Die Konfiguration findet in `src/config.py` statt. Es gibt eine neue Sektion `FoundationConfig`, die in `ExperimentConfig` als `foundation` eingebunden ist.
+
+Wichtige Felder:
+
+- `enabled`: Foundation-Pipeline ein-/ausschalten (Default: `False`)
+- `model_type`: `'dlinear'` oder `'nlinear'`
+- `input_chunk_length`, `output_chunk_length`: Standardmäßig auf die gleichen Werte wie TFT gesetzt (`60` / `10`)
+- `n_epochs`, `batch_size`, `lr`, `random_state`, `use_gpu`
+
+Beispiel (im Code):
+
+```python
+from src.config import ExperimentConfig
+
+cfg = ExperimentConfig()
+cfg.foundation.enabled = True
+cfg.foundation.model_type = "dlinear"  # oder "nlinear"
+cfg.foundation.n_epochs = 15            # schnellerer Testlauf
+```
+
+Die Foundation‑Modelle verwenden aktuell nur die Zielserie (univariate Prognose). Kovariaten werden nicht genutzt.
+
+## 12.2 Pipeline starten
+
+Der Haupteinstiegspunkt `src/main.py` startet immer die TFT‑Pipeline. Wenn `cfg.foundation.enabled = True` ist, wird zusätzlich die Foundation‑Pipeline gestartet. Am Ende werden die Metriken (RMSE, sMAPE) kompakt ausgegeben und – sofern beide Forecasts vorliegen – ein gemeinsamer Plot erstellt.
+
+Beispielaufruf:
+
+```bash
+python src/main.py
+```
+
+Die Datei lädt zunächst Yahoo‑Daten (Standard: `^SSMI` seit 2024‑01‑01), trainiert TFT und – falls aktiviert – DLinear/NLinear. Anschließend erscheinen die Metriken sowie ein Plot: „Actual vs TFT vs Foundation“.
+
+## 12.3 Architekturelle Unterschiede (kurz)
+
+- TFT: Attention‑basiertes Deep‑Learning‑Modell mit Encoder/Decoder, unterstützt statische und zeitliche Kovariaten, bietet Quantile‑Loss, Explainability und ist rechenintensiver.
+- DLinear/NLinear: Lineare Modelle mit Trend/Seasonality‑Decomposition (DLinear) bzw. vereinfachter linearer Projektion (NLinear). Sehr schnell zu trainieren, unterstützen in dieser einfachen Konfiguration keine Kovariaten und liefern meist solide Baselines.
+
+Implikationen:
+- Geschwindigkeit: D/NLinear deutlich schneller als TFT.
+- Features/Kovariaten: TFT kann reichhaltige Kovariaten nutzen; D/NLinear in diesem Setup nicht.
+- Training: D/NLinear eignet sich gut für schnelle Experimente und als Benchmark.
+
+## 12.4 Optional: Backtesting
+
+Für Parität kann das vorhandene Backtesting aus `backtesting_and_explain.py` auch mit den Foundation‑Modellen ausprobiert werden. Da diese Modelle keine Kovariaten nutzen, ist der Aufruf vereinfacht; die Integration ist optional und nicht zwingend für den End‑to‑End‑Lauf erforderlich.
+
+
+# 13. Evaluationsfluss für Studierende
 
 (Details stehen im separaten **Assignment**)
 
@@ -268,7 +323,7 @@ Studierende sollen:
 
 ---
 
-# 13. Fazit
+# 14. Fazit
 
 Dieses Starter-Kit ist:
 

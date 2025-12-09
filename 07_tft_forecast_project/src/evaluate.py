@@ -37,3 +37,30 @@ def plot_compare_deterministic_vs_quantile(
     plt.legend()
     plt.tight_layout()
     plt.show()
+
+
+def plot_compare_models(
+    actual: TimeSeries,
+    tft_det: TimeSeries | None = None,
+    tft_qmed: TimeSeries | None = None,
+    foundation: TimeSeries | None = None,
+    title: str = "Actual vs TFT vs Foundation",
+):
+    """
+    Plot Actual vs. any combination of:
+      - TFT deterministic
+      - TFT quantile median
+      - Foundation (DLinear/NLinear)
+    """
+    plt.figure(figsize=(11, 6))
+    actual.plot(label="Actual", linewidth=2, color="#222222")
+    if tft_det is not None:
+        tft_det.plot(label="TFT (det)", color="#1f77b4")
+    if tft_qmed is not None:
+        tft_qmed.plot(label="TFT (q50)", color="#ff7f0e")
+    if foundation is not None:
+        foundation.plot(label="Foundation", color="#2ca02c")
+    plt.title(title)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()

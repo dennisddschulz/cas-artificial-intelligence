@@ -58,7 +58,27 @@ class ModelConfig:
 
 
 @dataclass
+class FoundationConfig:
+    # Enable/disable foundation model pipeline
+    enabled: bool = True
+    # 'dlinear' or 'nlinear'
+    model_type: str = "nlinear"
+
+    # Align sensible defaults with current TFT setup
+    input_chunk_length: int = 60
+    output_chunk_length: int = 10
+
+    # Training hyperparameters
+    n_epochs: int = 20
+    batch_size: int = 32
+    lr: float = 1e-3
+    random_state: int = 42
+    use_gpu: bool = False
+
+
+@dataclass
 class ExperimentConfig:
     data: DataConfig = DataConfig()
     features: FeatureConfig = FeatureConfig()
     model: ModelConfig = ModelConfig()
+    foundation: FoundationConfig = FoundationConfig()
