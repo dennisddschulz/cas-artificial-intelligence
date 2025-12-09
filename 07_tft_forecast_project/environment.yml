@@ -8,7 +8,7 @@ dependencies:
       - torch
       - torchvision
       - torchaudio
-      - darts[u]
+      - u8darts==0.39.0
       - numpy==1.26.4
       - pandas
       - matplotlib

@@ -1,7 +1,8 @@
-from pathlib import Path
 
+from darts import TimeSeries
 from darts.metrics import rmse, smape
 import numpy as np
+import pandas as pd
 
 from src.timeseries_prep import split_series
 from src.data_loading import load_timeseries_csv
@@ -154,21 +155,35 @@ def run_experiment(cfg: ExperimentConfig):
 
         # Use median quantile for point forecast
         median_q = 0.5 if 0.5 in cfg.model.quantiles else sorted(cfg.model.quantiles)[len(cfg.model.quantiles)//2]
-        try:
+        if hasattr(model_q, "predict_quantiles"):
+            print("=== predict_quantiles ===")
             fc_q_median_sc = model_q.predict_quantiles(
                 n=len(y_test_sc),
                 series=y_train_val_sc,
                 past_covariates=full_cov_sc,
                 quantiles=[median_q],
             )[0]
-        except AttributeError:
-            # Compatibility fallback for Darts versions without predict_quantiles on TFTModel
-            print("[WARN] TFTModel has no predict_quantiles(). Falling back to predict() as median forecast.")
-            fc_q_median_sc = model_q.predict(
+        else:
+            # Sampling-based quantiles when predict_quantiles() is unavailable
+            fc_samples_sc = model_q.predict(
                 n=len(y_test_sc),
                 series=y_train_val_sc,
                 past_covariates=full_cov_sc,
+                num_samples=500,
             )
+            # Darts 0.39: TimeSeries no longer has quantile_timeseries; use quantiles_df
+            try:
+                qdf = fc_samples_sc.quantiles_df([median_q])
+                # qdf may have MultiIndex columns; take the first column
+                if isinstance(qdf, pd.DataFrame):
+                    col = qdf.columns[0]
+                    q_series = qdf[col]
+                else:
+                    q_series = qdf
+                fc_q_median_sc = TimeSeries.from_series(q_series)
+            except Exception:
+                # Fallback of last resort: use the mean across samples (approx median)
+                fc_q_median_sc = fc_samples_sc
 
         fc_q_median = target_scaler.inverse_transform(fc_q_median_sc)
         q_rmse = rmse(y_test_inv, fc_q_median)
