@@ -78,7 +78,6 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 chmod +x Miniconda3-latest-Linux-x86_64.sh
 ./Miniconda3-latest-Linux-x86_64.sh
 
-# conda config --set proxy_servers.https https://isc-den:Sommer\!500@proxy.infet.ejpd.admin.ch:8080
 conda config --set ssl_verify false
 
 ## 3.2 Installation
