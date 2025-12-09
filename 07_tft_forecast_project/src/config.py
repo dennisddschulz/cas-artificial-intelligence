@@ -51,6 +51,11 @@ class ModelConfig:
     random_state: int = 42
     use_gpu: bool = False
 
+    # Training variants
+    train_deterministic: bool = True
+    train_quantile: bool = True
+    quantiles: tuple[float, ...] = (0.1, 0.5, 0.9)
+
 
 @dataclass
 class ExperimentConfig:

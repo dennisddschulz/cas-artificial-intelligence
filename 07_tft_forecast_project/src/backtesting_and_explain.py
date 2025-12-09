@@ -304,7 +304,7 @@ def explain_tft_variables(
     print("Verfügbare Feature-Importance-Keys:", list(fi_dict.keys()))
     print("Beispiel – Encoder Importances (erste Zeilen):")
     encoder_df = fi_dict.get("encoder_importance")
-    if encoder_df is not None is not False:
+    if encoder_df is not None:
         if isinstance(encoder_df, list):
             print(encoder_df[0].head())
         else:
