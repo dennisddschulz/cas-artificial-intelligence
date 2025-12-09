@@ -60,7 +60,7 @@ class ModelConfig:
 @dataclass
 class FoundationConfig:
     # Enable/disable foundation model pipeline
-    enabled: bool = True
+    enabled: bool = False
     # 'dlinear' or 'nlinear'
     model_type: str = "nlinear"
 
