@@ -23,12 +23,23 @@ def dataframe_to_timeseries(
       mit täglichen Finanzdaten (Business Days) arbeiten.
     - Der DataFrame-Index wird als Zeitachse verwendet (DatetimeIndex).
     """
+
+
+    df.index = pd.to_datetime(df.index)
+
+    # Create full date range
+    full_idx = pd.date_range(df.index.min(), df.index.max(), freq="D")
+
+    # Reindex and fill missing days with last available value
+    df = df.reindex(full_idx).ffill()
+
+
     target_series = TimeSeries.from_dataframe(
         df,
         value_cols=target_col,
-        fill_missing_dates=False,   # fehlende Zeitpunkte auffüllen
+        fill_missing_dates=True,   # fehlende Zeitpunkte auffüllen
         freq="B",                  # Business-Day-Frequenz (Mo–Fr, ohne Wochenenden)
-        fillna_value=0
+        fillna_value=1
     )
 
     covariates_series = None

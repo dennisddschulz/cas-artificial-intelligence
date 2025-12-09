@@ -38,7 +38,9 @@ class FeatureConfig:
 
 @dataclass
 class ModelConfig:
+    # 60 Tage zuruck
     input_chunk_length: int = 60   # encoder length
+    # 10 Tage voraus
     output_chunk_length: int = 10  # forecast horizon
     hidden_size: int = 32
     lstm_layers: int = 2
