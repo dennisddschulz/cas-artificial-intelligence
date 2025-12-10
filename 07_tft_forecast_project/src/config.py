@@ -7,7 +7,7 @@ class DataConfig:
     # Path to CSV with time series
     csv_path: Path = Path("data/raw/example_prices.csv")
     datetime_col: str = "date"
-    target_col: str = "close"   # main series to forecast
+    target_col: str = "log_return"   # main series to forecast
 
     # Optional columns for finance (can be missing in non-finance data)
     open_col: str | None = "open"
@@ -22,7 +22,7 @@ class DataConfig:
 
 @dataclass
 class FeatureConfig:
-    use_log_return: bool = True
+    use_log_return: bool = False
     use_rolling_volatility: bool = True
     use_sma_fast: bool = True
     use_sma_slow: bool = True
@@ -53,7 +53,7 @@ class ModelConfig:
 
     # Training variants
     train_deterministic: bool = True
-    train_quantile: bool = True
+    train_quantile: bool = False
     quantiles: tuple[float, ...] = (0.1, 0.5, 0.9)
 
 
