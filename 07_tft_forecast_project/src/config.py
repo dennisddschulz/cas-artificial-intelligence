@@ -53,16 +53,16 @@ class ModelConfig:
 
     # Training variants
     train_deterministic: bool = True
-    train_quantile: bool = False
+    train_quantile: bool = True
     quantiles: tuple[float, ...] = (0.1, 0.5, 0.9)
 
 
 @dataclass
 class FoundationConfig:
     # Enable/disable foundation model pipeline
-    enabled: bool = False
+    enabled: bool = True
     # 'dlinear' or 'nlinear'
-    model_type: str = "nlinear"
+    model_type: str = "dlinear"
 
     # Align sensible defaults with current TFT setup
     input_chunk_length: int = 60

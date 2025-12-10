@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 from darts import TimeSeries
 
+from src.config import FoundationConfig
+
 
 def plot_forecast(
     actual: TimeSeries,
@@ -52,6 +54,8 @@ def plot_compare_models(
       - TFT quantile median
       - Foundation (DLinear/NLinear)
     """
+
+    cfg = FoundationConfig()
     plt.figure(figsize=(11, 6))
     actual.plot(label="Actual", linewidth=2, color="#222222")
     if tft_det is not None:
@@ -59,7 +63,7 @@ def plot_compare_models(
     if tft_qmed is not None:
         tft_qmed.plot(label="TFT (q50)", color="#ff7f0e")
     if foundation is not None:
-        foundation.plot(label="Foundation", color="#2ca02c")
+        foundation.plot(label="Foundation " + cfg.model_type, color="#2ca02c")
     plt.title(title)
     plt.legend()
     plt.tight_layout()
