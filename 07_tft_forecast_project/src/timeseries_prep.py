@@ -36,7 +36,7 @@ def dataframe_to_timeseries(
 
     target_series = TimeSeries.from_dataframe(
         df,
-        value_cols=target_col,
+        value_cols="log_return",
         fill_missing_dates=True,   # fehlende Zeitpunkte auffüllen
         freq="B",                  # Business-Day-Frequenz (Mo–Fr, ohne Wochenenden)
         fillna_value=1
