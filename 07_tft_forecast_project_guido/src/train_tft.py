@@ -1,4 +1,5 @@
 from pathlib import Path
+from darts.utils.likelihood_models import QuantileRegression
 
 from darts.metrics import rmse, smape
 import numpy as np
@@ -98,7 +99,7 @@ def run_experiment(cfg: ExperimentConfig):
     check_timeseries(y_train_val_sc, "y_train_val_sc")
     check_timeseries(y_test_sc, "y_test_sc")
 
-    model = create_tft_model(cfg.model)
+    model = create_tft_model(cfg.model, use_quantile=False)
 
     model.fit(
         series=train,
@@ -197,6 +198,12 @@ def run_experiment(cfg: ExperimentConfig):
     if cfg.model.train_quantile:
         model_q = create_tft_model(cfg.model, use_quantile=True)
 
+        print("train_quantile:", cfg.model.train_quantile)
+        print("cfg.model.quantiles:", cfg.model.quantiles)
+
+        print("model_q.likelihood:", model_q.likelihood)
+        print("model_q._is_probabilistic:", getattr(model_q, "_is_probabilistic", None))
+
         model_q.fit(
             series=train,
             past_covariates=cov_train,
@@ -204,6 +211,19 @@ def run_experiment(cfg: ExperimentConfig):
             val_past_covariates=cov_val,
             verbose=True,
         )
+        print("=== MODEL_Q DEBUG ===")
+        print("model_q.likelihood:", model_q.likelihood)
+        print("type(likelihood):", type(model_q.likelihood))
+        print("is QuantileRegression:", isinstance(model_q.likelihood, QuantileRegression))
+        print("model_q._is_probabilistic:", getattr(model_q, "_is_probabilistic", None))
+
+        tmp = model_q.predict(
+            n=3,
+            series=y_train_val_sc,
+            past_covariates=full_cov_sc,
+        )
+        print("predict() components:", list(tmp.components))
+        print("=====================")
 
         quantiles = cfg.model.quantiles
 
