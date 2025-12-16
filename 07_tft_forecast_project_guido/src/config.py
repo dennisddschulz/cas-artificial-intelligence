@@ -65,10 +65,10 @@ class FeatureConfig:
 @dataclass
 class ModelConfig:
     input_chunk_length: int = 60  # encoder length
-    output_chunk_length: int = 1  # forecast horizon
+    output_chunk_length:int = 10  # forecast horizon
     hidden_size: int = 42
     lstm_layers: int = 1
-    dropout: float = 0.17
+    dropout: float = 0.4
     batch_size: int = 64
     n_epochs: int = 20
     lr: float = 0.00047

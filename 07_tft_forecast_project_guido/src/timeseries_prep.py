@@ -1,4 +1,6 @@
 from typing import Tuple
+
+import numpy as np
 from darts import TimeSeries
 from darts.dataprocessing.transformers import Scaler
 

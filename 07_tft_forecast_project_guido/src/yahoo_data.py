@@ -8,7 +8,7 @@ import pandas as pd
 import yfinance as yf
 
 from src.config import DataConfig
-
+import os
 
 def download_yahoo_ohlcv(
     symbol: str,
@@ -30,11 +30,19 @@ def download_yahoo_ohlcv(
     interval : str
         Zeitintervall ("1d", "1h", etc.).
 
+
+
     Rückgabe:
     ---------
     df : pd.DataFrame
         OHLCV-Daten mit DatetimeIndex.
     """
+
+
+
+    os.environ['HTTPS_PROXY'] = 'http://proxy.infet.ejpd.admin.ch:8080'
+
+
     df = yf.download(
         tickers=symbol,
         start=start,
@@ -160,13 +168,20 @@ def download_yahoo_to_csv(
     Pfad zur erzeugten CSV-Datei.
     """
 
+
+    csv_path: Path = cfg.csv_path
+
+    #if Path(csv_path).exists():
+    #    print("CSV exists, skipping Yahoo download")
+    #    return csv_path
+
+
     print(f"▶ Lade Yahoo Finance Daten für: {symbol}")
     df_raw = download_yahoo_ohlcv(symbol, start=start, end=end, interval=interval)
 
     print("▶ Normalisiere Daten ...")
     df_norm = normalize_ohlcv_dataframe_for_project(df_raw, cfg)
 
-    csv_path: Path = cfg.csv_path
     csv_path.parent.mkdir(parents=True, exist_ok=True)
 
     df_norm.to_csv(csv_path, index=False)

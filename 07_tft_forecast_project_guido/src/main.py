@@ -40,19 +40,19 @@ def main():
     results = run_experiment(cfg)
 
     # 4. Log-Returns → Preis rekonstruieren
-    forecast_price = reconstruct_price_from_log_return(results["forecast"], base_price=100.0)
-    forecast_q_median_price = reconstruct_price_from_log_return(results["forecast_q_median"], base_price=100.0)
-    actual_price = reconstruct_price_from_log_return(results["y_test"], base_price=100.0)
+    #forecast_price = reconstruct_price_from_log_return(results["deterministic"]["forecast"], base_price=100.0)
+    #forecast_q_median_price = reconstruct_price_from_log_return(results["forecast_q_median"], base_price=100.0)
+    #actual_price = reconstruct_price_from_log_return(results["y_test"], base_price=100.0)
 
     # 5. Saubere Trading-Simulation mit Preisreihen
-    trade = trading_simulation_long_short(actual=actual_price, forecast=forecast_price)
-    trade_quantile = trading_simulation_long_short(actual=actual_price, forecast=forecast_q_median_price)
+    #trade = trading_simulation_long_short(actual=actual_price, forecast=forecast_price)
+    #trade_quantile = trading_simulation_long_short(actual=actual_price, forecast=forecast_q_median_price)
 
     # 6. Ergebnisse sichern
-    results["forecast_price"] = forecast_price
-    results["actual_price"] = actual_price
-    results["trading"] = trade
-    results["trading_quantile"] = trade_quantile
+    #results["forecast_price"] = forecast_price
+    #results["actual_price"] = actual_price
+    #results["trading"] = trade
+    #results["trading_quantile"] = trade_quantile
 
     # 3b. Optional: Foundation Model (DLinear/NLinear)
     # foundation_results = {}
@@ -72,9 +72,9 @@ def main():
     try:
         # Prefer y_test from foundation if TFT did not set it
         actual = results.get("actual_price") #or foundation_results.get("y_test")
-        det_fc = results.get("forecast")
-        qmed_fc = results.get("forecast_q_median")
-        #fnd_fc = foundation_results.get("forecast_foundation")
+        det_fc = results["deterministic"]["forecast"]
+        qmed_fc = results["quantile"]["price_forecasts"]["q05"]
+        # fnd_fc = foundation_results.get("forecast_foundation")
 
         if actual is None:
             print("[WARN] 'y_test' fehlt in results; kann nicht plotten.")
