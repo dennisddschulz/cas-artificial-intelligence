@@ -117,9 +117,10 @@ def run_experiment(cfg: ExperimentConfig):
         n=len(y_test_sc),
         series=y_train_val_sc,
         past_covariates=full_cov_sc,
+        num_samples=500,
     )
-
     forecast_inv = target_scaler.inverse_transform(forecast_scaled)
+
     y_test_inv = target_scaler.inverse_transform(y_test_sc)
 
     test_rmse = rmse(y_test_inv, forecast_inv)
@@ -220,7 +221,7 @@ def run_experiment(cfg: ExperimentConfig):
         tmp = model_q.predict(
             n=3,
             series=y_train_val_sc,
-            past_covariates=full_cov_sc,
+            past_covariates=full_cov_sc
         )
         print("predict() components:", list(tmp.components))
         print("=====================")
@@ -233,7 +234,7 @@ def run_experiment(cfg: ExperimentConfig):
             n=len(y_test_sc),
             series=y_train_val_sc,
             past_covariates=full_cov_sc,
-            quantiles=quantiles,
+            quantiles=quantiles
         )
 
         # Inverse scale log-returns
@@ -277,6 +278,7 @@ def run_experiment(cfg: ExperimentConfig):
         "y_train_val": y_train_val,
         "y_test": actual_log_ret_test,  # y_test ist Log-Return
         "forecast": forecast_inv,
+        "actual_log_return": y_test_inv,
         "forecast_price": reconstruct_price_from_log_return(forecast_inv, base_price=BASE_PRICE),
         # Für den direkten Test-Split
         "actual_price": reconstruct_price_from_log_return(actual_log_ret_test, base_price=BASE_PRICE),
@@ -297,3 +299,11 @@ def run_experiment(cfg: ExperimentConfig):
         "y_train_val_sc": y_train_val_sc,
         "cov_train_val_sc" : cov_train_val_sc
     }
+
+def inverse_transform_like_target(target_scaler, ts, target_name="log_return_morgen"):
+    # Force the component name to match what the scaler was fit on
+    if ts.n_components == 1 and ts.components[0] != target_name:
+        ts2 = ts.with_columns_renamed(ts.components[0], target_name)
+        ts2 = target_scaler.inverse_transform(ts2)
+        return ts2.with_columns_renamed(target_name, ts.components[0])
+    return target_scaler.inverse_transform(ts)
