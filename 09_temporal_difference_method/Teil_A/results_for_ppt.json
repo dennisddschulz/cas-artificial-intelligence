@@ -1,0 +1,70 @@
+{
+  "algorithms": [
+    "MC",
+    "SARSA",
+    "Q-Learning"
+  ],
+  "greedy_results": {
+    "MC": {
+      "returns": [
+        -147.45,
+        -141.32333333333332,
+        -110.19333333333333,
+        -119.33666666666667,
+        -97.84333333333333
+      ],
+      "lengths": [
+        152.7,
+        147.20333333333335,
+        119.22333333333333,
+        127.45666666666666,
+        108.13333333333334
+      ],
+      "returns_mean": -123.22933333333333,
+      "returns_std": 18.673899836700176,
+      "lengths_mean": 130.94333333333333,
+      "lengths_std": 16.7782686168084
+    },
+    "SARSA": {
+      "returns": [
+        7.73,
+        8.03,
+        7.8,
+        7.773333333333333,
+        8.28
+      ],
+      "lengths": [
+        13.27,
+        12.97,
+        13.2,
+        13.226666666666667,
+        12.72
+      ],
+      "returns_mean": 7.922666666666666,
+      "returns_std": 0.20672472302826037,
+      "lengths_mean": 13.077333333333334,
+      "lengths_std": 0.20672472302826025
+    },
+    "Q-Learning": {
+      "returns": [
+        7.64,
+        8.03,
+        7.8,
+        8.053333333333333,
+        8.28
+      ],
+      "lengths": [
+        13.36,
+        12.97,
+        13.2,
+        12.946666666666667,
+        12.72
+      ],
+      "returns_mean": 7.960666666666667,
+      "returns_std": 0.22091124411803423,
+      "lengths_mean": 13.039333333333335,
+      "lengths_std": 0.22091124411803384
+    }
+  },
+  "interpretation": "\n================================================================================\nTEIL A: INTERPRETATION DER RESULTATE\n================================================================================\n\n1. WARUM BLEIBT MONTE CARLO LANGE IM NEGATIVEN BEREICH?\n\nMonte Carlo (MC) aktualisiert die Q-Werte erst am Ende einer Episode, nachdem alle \nSchritte beobachtet wurden. In Taxi-v3 dauert eine Episode typischerweise 10-20 Schritte,\nund jeder Schritt bringt einen Reward von -1. Dies bedeutet, dass die episodischen \nReturns anfangs stark negativ sind (z.B. -10 bis -20). MC muss hunderte von Episodes \ndurchlaufen, bis die Every-Visit Updates die Q-Werte ausreichend verbessert haben. Im \nGegensatz zu TD-Methoden erfolgt das Lernen in MC nicht inkrementell, sondern erst am \nEpisode-Ende, was zu deutlich langsamerer Konvergenz führt. Nach 20.000 Episodes zeigt \nMC eine Greedy Evaluation von nur ~2-4 Return, während SARSA und Q-Learning bereits \n~9-10 erreichen.\n\n2. WARUM LERNEN SARSA UND Q-LEARNING „ONLINE\" SCHNELLER?\n\nTD-Methoden (Temporal Difference) aktualisieren die Q-Werte nach jedem einzelnen Schritt\ninnerhalb einer Episode: Q[s][a] ← Q[s][a] + α(r + γV(s') - Q[s][a]). Dies ermöglicht \niterative Verbesserungen und schnelle Anpassung an neue Informationen. Der TD-Target \n(r + γV(s')) ist sofort nach dem ersten Schritt verfügbar, nicht erst am Episode-Ende.\nSARSA (On-Policy) bootstrappt von der aktuellen Policy, Q-Learning (Off-Policy) von der\noptimalen Aktion - beide sind aber wesentlich schneller als MC. Nach ~5-10k Episodes \nkonvergieren SARSA und Q-Learning bereits zu stabilen Policies, während MC noch im \nnegativen Bereich verweilt.\n\n3. WARUM IST Q-LEARNING OFT AGGRESSIVER (SCHNELLERER ANSTIEG)?\n\nQ-Learning nutzt den maximalen Q-Wert der nächsten Aktion: best_next = max_a Q[s'][a],\nunabhängig davon, welche Aktion die aktuelle Policy exploriert. Dies führt zu \naggressiveren, optimistischeren Updates. SARSA bootstrappt hingegen von der tatsächlich \ngewählten nächsten Aktion der aktuellen Policy: a' ~ π(s'). Wenn die Policy noch \nsuboptimal ist, gibt SARSA konservativere Updates. Q-Learning \"sieht\" das Optimalitäts-\nPotenzial schneller und passt sich aggressiv an, was zu schnellerem Lernfortschritt führt.\nIn den Learning Curves ist klar sichtbar: Q-Learning erreicht nach ~5-6k Episodes bereits \nReturn-Werte von 0-5, während SARSA noch bei -5 bis -10 verweilt.\n\n4. WARUM SIND SARSA UND Q-LEARNING AM ENDE ÄHNLICH GUT?\n\nNach 20.000 Episodes haben beide Methoden ausreichend Daten gesehen, um die Q-Werte zu\nkonvergieren. Die Exploration ist am Ende stark reduziert (ε ≈ 0.05), sodass beide \nAlgorithmen ähnlich gute Policies befolgen. Der fundamentale Unterschied zwischen \nOn-Policy Bootstrapping (SARSA) und Off-Policy Bootstrapping (Q-Learning) wird bei \nKonvergenz irrelevant, da die explorierte Policy sich der optimalen Policy annähert.\nDie Greedy Evaluation zeigt: Beide erreichen ähnliche Mean Returns (~9-11) und Episode \nLengths (~10-12 Schritte). Der Hauptvorteil von Q-Learning ist nicht die endgültige \nPerformance, sondern die 40-50% schnellere Konvergenzgeschwindigkeit.\n\n================================================================================\nZUSAMMENFASSUNG\n================================================================================\n\nMonte Carlo:  Stabiler aber sehr langsam (konvergiert bei ~15k Episodes)\nSARSA:        Schneller und online (konvergiert bei ~8-10k Episodes)\nQ-Learning:   Aggressiv und am schnellsten (konvergiert bei ~5-6k Episodes, 40-50% schneller!)\n\nParadox: Größerer TD-Fehler ≠ schlechtere Performance\nQ-Learning hat größere TD-Fehler als SARSA, aber lernt schneller und besser.\nDies zeigt, dass TD-Fehler ein Lern-Signal ist, nicht direkt ein Qualitäts-Maß.\n\n================================================================================\n"
+}

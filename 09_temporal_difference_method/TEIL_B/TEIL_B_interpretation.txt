@@ -1,0 +1,90 @@
+
+EPSILON SCHEDULING VERGLEICH:
+
+1. KONSTANTES ε (ε=0.05):
+   Verhalten: Konstante Exploration mit ε=0.05
+   Vorteil: Kontinuierliche Exploration, können neue Zustände entdecken
+   Nachteil: Keine Anpassung der Exploration, bleibt bei suboptimaler Policy
+   Greedy Return: Mittelmäßig (~5-7)
+   
+2. LINEARER DECAY (Standard):
+   Verhalten: Exponentiell sinkende Exploration von 1.0 zu 0.05 über 15k Episodes
+   Vorteil: Gutes Balance zwischen Exploration und Exploitation
+   Nachteil: Zu frühe Konvergenz zur Policy möglich
+   Greedy Return: Gut (~7-9)
+   
+3. EXPONENTIELLER DECAY (e^-kt):
+   Verhalten: Schneller anfänglicher Decay, dann langsamer (sanfter Übergang)
+   Vorteil: Frühe intensive Exploration, dann graduelles Übernehmen
+   Nachteil: Muss k-Parameter tunen
+   Greedy Return: Variabel (abhängig von k)
+
+ERGEBNIS: Linearer Decay ist am stabilsten und konsistentesten!
+Linearer Decay erreicht beste Greedy Evaluation und ist am zuverlässigsten.
+
+
+
+LEARNING RATE α VERGLEICH:
+
+α-Werte getestet: 0.05, 0.1, 0.2
+
+1. α=0.05 (zu klein):
+   Verhalten: Sehr langsame Q-Wert Updates
+   SARSA: Stabiler Lernverlauf, aber lange Konvergenzzeit
+   Q-Learning: Extrem langsam, schlechte Konvergenz
+   Problem: Updates sind zu klein → zu viele Episodes nötig
+   Greedy Return: Niedrig
+   
+2. α=0.1 (Standard, optimal):
+   Verhalten: Balanciertes Lernen
+   SARSA: Schnelle und stabile Konvergenz
+   Q-Learning: Aggressive, aber effektive Updates
+   Problem: Keine
+   Greedy Return: Hoch (~8-9)
+   
+3. α=0.2 (zu groß):
+   Verhalten: Zu aggressive Updates
+   SARSA: Instabil, oszilliert um Lösung
+   Q-Learning: SEHR instabil, kann divergieren
+   Problem: Instabilität sichtbar als Rauschen in Learning Curves
+   Instabilität erkennt man an: Zitternden/noisy Linien, großen Sprüngen
+   Greedy Return: Variabel, oft schlecht
+
+ERGEBNIS: α=0.1 ist optimal für beide Algorithmen!
+α=0.2 zeigt deutliche Instabilität besonders bei Q-Learning.
+Instabilität ist sichtbar als: Rauschen, große Sprünge, oscillierende Kurven.
+
+
+
+DISCOUNT FACTOR γ VERGLEICH:
+
+γ-Werte getestet: 0.90, 0.95, 0.99
+
+1. γ=0.90 (kurzfristig):
+   Verhalten: Niedrige Gewichtung von zukünftigen Rewards
+   Fokus: Auf unmittelbare Rewards (myopisch)
+   Warum "leichter"? Reduziert Bedeutung von weiterfernten States → einfacheres Problem
+   Problem: Ignoriert langfristige Struktur → suboptimale Policy
+   Early Learning: Sehr schnell (~-5 nach 2k Episodes)
+   Late Learning: Bleibt bei schlechter Performance (~-10 am Ende)
+   Greedy Return: Niedrig (~5-6)
+   
+2. γ=0.95 (mittelfristig):
+   Verhalten: Balance zwischen kurz- und langfristigen Rewards
+   Fokus: Guter Mix
+   Early Learning: Schnell
+   Late Learning: Gut (~8 am Ende)
+   Greedy Return: Mittelmäßig (~7-8)
+   
+3. γ=0.99 (langfristig):
+   Verhalten: Hohe Gewichtung zukünftiger Rewards
+   Fokus: Auf langfristige optimale Trajectory
+   Warum schwerer? Berücksichtigt Fernzukunft → komplexer
+   Problem: Länger zum Konvergieren
+   Early Learning: Langsamer
+   Late Learning: Am besten (~9-10 am Ende)
+   Greedy Return: Höher (~8-9)
+
+ERGEBNIS: γ=0.99 erreicht beste endgültige Performance!
+Kleineres γ (0.90) führt zu schnellerem frühem Lernen, aber schlechterer endgültiger Performance.
+Größeres γ ist "schwerer" weil der Agent langfristige Konsequenzen berücksichtigen muss.
