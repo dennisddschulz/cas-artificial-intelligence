@@ -398,12 +398,12 @@ plt.close()
 print(f"✓ Saved: {output_path}")
 
 # ============================================================================
-# PLOT 2: VERBESSERTE GREEDY EVALUATION BAR CHARTS
+# PLOT 2: VERBESSERTE GREEDY EVALUATION BAR CHARTS MIT LEGEND
 # ============================================================================
 
 print("Plot 2: Greedy Evaluation Bar Charts...", end=" ", flush=True)
 
-fig, axes = plt.subplots(1, 2, figsize=(16, 7))
+fig, axes = plt.subplots(1, 2, figsize=(18, 8))
 
 algorithms = ["MC", "SARSA", "Q-Learning"]
 colors = ["#d62728", "#1f77b4", "#2ca02c"]
@@ -418,39 +418,67 @@ returns_maxs = [np.max(greedy_results[alg]["returns"]) for alg in algorithms]
 
 # Zeichne Bars
 bars = ax.bar(x_pos, returns_means, yerr=returns_stds, capsize=15,
-              color=colors, alpha=0.8, edgecolor="black", linewidth=2.5)
+              color=colors, alpha=0.8, edgecolor="black", linewidth=2.5,
+              label="Mean ± Std Dev")
 
 # Zusätzliche Min-Max Linien für bessere Sichtbarkeit
 for i, (mean, min_val, max_val) in enumerate(zip(returns_means, returns_mins, returns_maxs)):
     # Min-Max Spanne als dünne Linien
-    ax.plot([i, i], [min_val, max_val], color=colors[i], linewidth=3,
-            linestyle="--", alpha=0.6, zorder=5)
+    ax.plot([i, i], [min_val, max_val], color=colors[i], linewidth=4,
+            linestyle="--", alpha=0.7, zorder=5)
     # Punkte für Min/Max
-    ax.plot(i, min_val, 'o', color=colors[i], markersize=8, markeredgecolor="black",
-            markeredgewidth=1.5, zorder=6)
-    ax.plot(i, max_val, 's', color=colors[i], markersize=8, markeredgecolor="black",
-            markeredgewidth=1.5, zorder=6)
+    ax.plot(i, min_val, 'o', color=colors[i], markersize=10, markeredgecolor="black",
+            markeredgewidth=2, zorder=6)
+    ax.plot(i, max_val, 's', color=colors[i], markersize=10, markeredgecolor="black",
+            markeredgewidth=2, zorder=6)
 
-ax.set_ylabel("Mean Return (Greedy Evaluation)", fontsize=14, fontweight="bold")
-ax.set_title("Greedy Evaluation: Mean Return (±Std, Min/Max) über 5 Seeds\n(300 Episodes pro Seed)",
-             fontsize=15, fontweight="bold")
+ax.set_ylabel("Mean Return (Greedy Evaluation)", fontsize=15, fontweight="bold")
+ax.set_title("Greedy Evaluation: Return Distribution over 5 Seeds",
+             fontsize=16, fontweight="bold", pad=20)
 ax.set_xticks(x_pos)
-ax.set_xticklabels(algorithms, fontsize=13, fontweight="bold")
-ax.grid(axis="y", alpha=0.4, linestyle="--")
-ax.axhline(y=0, color="black", linewidth=0.5, linestyle="-", alpha=0.5)
+ax.set_xticklabels(algorithms, fontsize=14, fontweight="bold")
+ax.grid(axis="y", alpha=0.4, linestyle="--", linewidth=1.5)
+ax.axhline(y=0, color="black", linewidth=1, linestyle="-", alpha=0.5)
 
-# Werte auf Balken (mittlerer + unterer/oberer Wert)
+# Werte auf Balken (mittlerer + unterer/oberer Wert) - größere Fonts
 for i, (mean, std, min_val, max_val) in enumerate(zip(returns_means, returns_stds, returns_mins, returns_maxs)):
-    # Mean ± Std Text
-    ax.text(i, mean + std + 3, f"{mean:.1f}±{std:.1f}", ha="center", va="bottom",
-            fontsize=12, fontweight="bold")
-    # Min-Max Text
-    ax.text(i - 0.35, max_val + 1, f"max:{max_val:.1f}", ha="right", va="bottom",
-            fontsize=10, style="italic", color=colors[i])
-    ax.text(i - 0.35, min_val - 1, f"min:{min_val:.1f}", ha="right", va="top",
-            fontsize=10, style="italic", color=colors[i])
+    # Mean ± Std Text (centered above the bar)
+    ax.text(i, mean + std + 8, f"Mean: {mean:.1f}±{std:.1f}", ha="center", va="bottom",
+            fontsize=13, fontweight="bold", bbox=dict(boxstyle="round,pad=0.5",
+            facecolor="white", edgecolor=colors[i], linewidth=2.5, alpha=0.95))
 
-ax.set_ylim(min(returns_mins) - 20, max(returns_maxs) + 30)
+    # Intelligente Positionierung basierend auf Range
+    value_range = max_val - min_val
+    if value_range < 10:  # Kleine Range (SARSA, Q-Learning)
+        # Positioniere oben und unten
+        ax.text(i + 0.25, max_val + 2, f"Max: {max_val:.1f}", ha="left", va="bottom",
+                fontsize=10, fontweight="bold", color=colors[i],
+                bbox=dict(boxstyle="round,pad=0.35", facecolor="white", alpha=0.9, edgecolor=colors[i], linewidth=1.5))
+        ax.text(i + 0.25, min_val - 2, f"Min: {min_val:.1f}", ha="left", va="top",
+                fontsize=10, fontweight="bold", color=colors[i],
+                bbox=dict(boxstyle="round,pad=0.35", facecolor="white", alpha=0.9, edgecolor=colors[i], linewidth=1.5))
+    else:  # Große Range (MC)
+        # Positioniere links (original)
+        ax.text(i - 0.35, max_val, f"Max:\n{max_val:.1f}", ha="right", va="center",
+                fontsize=10, fontweight="bold", color=colors[i],
+                bbox=dict(boxstyle="round,pad=0.35", facecolor="white", alpha=0.9, edgecolor=colors[i], linewidth=1))
+        ax.text(i - 0.35, min_val, f"Min:\n{min_val:.1f}", ha="right", va="center",
+                fontsize=10, fontweight="bold", color=colors[i],
+                bbox=dict(boxstyle="round,pad=0.35", facecolor="white", alpha=0.9, edgecolor=colors[i], linewidth=1))
+
+ax.set_ylim(min(returns_mins) - 25, max(returns_maxs) + 40)
+
+# Legend für Min-Max-Ranges
+from matplotlib.lines import Line2D
+legend_elements = [
+    Line2D([0], [0], color='gray', linewidth=3, linestyle='-', label='Error bars: ±Std Dev', alpha=0.7),
+    Line2D([0], [0], marker='o', color='w', markerfacecolor='gray', markersize=10,
+           markeredgecolor='black', markeredgewidth=1.5, label='Min value', linestyle='None'),
+    Line2D([0], [0], marker='s', color='w', markerfacecolor='gray', markersize=10,
+           markeredgecolor='black', markeredgewidth=1.5, label='Max value', linestyle='None'),
+    Line2D([0], [0], color='gray', linewidth=4, linestyle='--', label='Min-Max range', alpha=0.7),
+]
+ax.legend(handles=legend_elements, fontsize=12, loc='upper left', framealpha=0.95, edgecolor='black', fancybox=True)
 
 # ===== EPISODE LENGTH BAR CHART =====
 ax = axes[1]
@@ -460,34 +488,54 @@ lengths_mins = [np.min(greedy_results[alg]["lengths"]) for alg in algorithms]
 lengths_maxs = [np.max(greedy_results[alg]["lengths"]) for alg in algorithms]
 
 bars = ax.bar(x_pos, lengths_means, yerr=lengths_stds, capsize=15,
-              color=colors, alpha=0.8, edgecolor="black", linewidth=2.5)
+              color=colors, alpha=0.8, edgecolor="black", linewidth=2.5,
+              label="Mean ± Std Dev")
 
 # Min-Max Linien
 for i, (mean, min_val, max_val) in enumerate(zip(lengths_means, lengths_mins, lengths_maxs)):
-    ax.plot([i, i], [min_val, max_val], color=colors[i], linewidth=3,
-            linestyle="--", alpha=0.6, zorder=5)
-    ax.plot(i, min_val, 'o', color=colors[i], markersize=8, markeredgecolor="black",
-            markeredgewidth=1.5, zorder=6)
-    ax.plot(i, max_val, 's', color=colors[i], markersize=8, markeredgecolor="black",
-            markeredgewidth=1.5, zorder=6)
+    ax.plot([i, i], [min_val, max_val], color=colors[i], linewidth=4,
+            linestyle="--", alpha=0.7, zorder=5)
+    ax.plot(i, min_val, 'o', color=colors[i], markersize=10, markeredgecolor="black",
+            markeredgewidth=2, zorder=6)
+    ax.plot(i, max_val, 's', color=colors[i], markersize=10, markeredgecolor="black",
+            markeredgewidth=2, zorder=6)
 
-ax.set_ylabel("Mean Episode Length (Greedy Evaluation)", fontsize=14, fontweight="bold")
-ax.set_title("Greedy Evaluation: Mean Episode Length (±Std, Min/Max) über 5 Seeds\n(300 Episodes pro Seed)",
-             fontsize=15, fontweight="bold")
+ax.set_ylabel("Mean Episode Length (Greedy Evaluation)", fontsize=15, fontweight="bold")
+ax.set_title("Greedy Evaluation: Episode Length Distribution over 5 Seeds",
+             fontsize=16, fontweight="bold", pad=20)
 ax.set_xticks(x_pos)
-ax.set_xticklabels(algorithms, fontsize=13, fontweight="bold")
-ax.grid(axis="y", alpha=0.4, linestyle="--")
+ax.set_xticklabels(algorithms, fontsize=14, fontweight="bold")
+ax.grid(axis="y", alpha=0.4, linestyle="--", linewidth=1.5)
 
-# Werte auf Balken
+# Werte auf Balken - größere Fonts
 for i, (mean, std, min_val, max_val) in enumerate(zip(lengths_means, lengths_stds, lengths_mins, lengths_maxs)):
-    ax.text(i, mean + std + 0.5, f"{mean:.1f}±{std:.1f}", ha="center", va="bottom",
-            fontsize=12, fontweight="bold")
-    ax.text(i - 0.35, max_val + 0.3, f"max:{max_val:.1f}", ha="right", va="bottom",
-            fontsize=10, style="italic", color=colors[i])
-    ax.text(i - 0.35, min_val - 0.3, f"min:{min_val:.1f}", ha="right", va="top",
-            fontsize=10, style="italic", color=colors[i])
+    ax.text(i, mean + std + 0.9, f"Mean: {mean:.1f}±{std:.1f}", ha="center", va="bottom",
+            fontsize=13, fontweight="bold", bbox=dict(boxstyle="round,pad=0.5",
+            facecolor="white", edgecolor=colors[i], linewidth=2.5, alpha=0.95))
 
-ax.set_ylim(min(lengths_mins) - 5, max(lengths_maxs) + 10)
+    # Intelligente Positionierung basierend auf Range
+    value_range = max_val - min_val
+    if value_range < 2:  # Kleine Range (SARSA, Q-Learning)
+        # Positioniere oben und unten
+        ax.text(i + 0.25, max_val + 0.3, f"Max: {max_val:.1f}", ha="left", va="bottom",
+                fontsize=10, fontweight="bold", color=colors[i],
+                bbox=dict(boxstyle="round,pad=0.35", facecolor="white", alpha=0.9, edgecolor=colors[i], linewidth=1.5))
+        ax.text(i + 0.25, min_val - 0.3, f"Min: {min_val:.1f}", ha="left", va="top",
+                fontsize=10, fontweight="bold", color=colors[i],
+                bbox=dict(boxstyle="round,pad=0.35", facecolor="white", alpha=0.9, edgecolor=colors[i], linewidth=1.5))
+    else:  # Große Range (MC)
+        # Positioniere links (original)
+        ax.text(i - 0.35, max_val, f"Max:\n{max_val:.1f}", ha="right", va="center",
+                fontsize=10, fontweight="bold", color=colors[i],
+                bbox=dict(boxstyle="round,pad=0.35", facecolor="white", alpha=0.9, edgecolor=colors[i], linewidth=1))
+        ax.text(i - 0.35, min_val, f"Min:\n{min_val:.1f}", ha="right", va="center",
+                fontsize=10, fontweight="bold", color=colors[i],
+                bbox=dict(boxstyle="round,pad=0.35", facecolor="white", alpha=0.9, edgecolor=colors[i], linewidth=1))
+
+ax.set_ylim(min(lengths_mins) - 8, max(lengths_maxs) + 15)
+
+# Legend für Min-Max-Ranges
+ax.legend(handles=legend_elements, fontsize=12, loc='upper right', framealpha=0.95, edgecolor='black', fancybox=True)
 
 plt.tight_layout()
 output_path = os.path.join(OUTPUT_DIR, "02_greedy_evaluation_detailed.png")
