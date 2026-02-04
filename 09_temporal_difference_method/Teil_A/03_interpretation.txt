@@ -1,63 +1,43 @@
 
-================================================================================
-TEIL A: INTERPRETATION DER RESULTATE
-================================================================================
+INTERPRETATION DER RESULTATE:
 
-1. WARUM BLEIBT MONTE CARLO LANGE IM NEGATIVEN BEREICH?
+1. WARUM BLEIBT MONTE CARLO LANGE IM NEGATIVEN?
+   Monte Carlo Updates nur am Ende einer Episode, nachdem alle Schritte beobachtet wurden.
+   In Taxi-v3, wo typische Episodes 10-15 Schritte dauern und jeder Schritt -1 Reward
+   bringt, sind die Episoden-Returns anfangs sehr negativ (z.B. -15 bis -10).
+   Monte Carlo muss viele Episodes durchlaufen, bis die akkumulierten Rückwärts-Updates
+   (Every-Visit MC) den Q-Werten helfen, sich zu verbessern.
+   Zusätzlich: MC nutzt die volle Trajektorie, was weniger Flexibilität für Online-Anpassungen
+   bedeutet. Daher die Konvergenz deutlich langsamer.
 
-Monte Carlo (MC) aktualisiert die Q-Werte erst am Ende einer Episode, nachdem alle 
-Schritte beobachtet wurden. In Taxi-v3 dauert eine Episode typischerweise 10-20 Schritte,
-und jeder Schritt bringt einen Reward von -1. Dies bedeutet, dass die episodischen 
-Returns anfangs stark negativ sind (z.B. -10 bis -20). MC muss hunderte von Episodes 
-durchlaufen, bis die Every-Visit Updates die Q-Werte ausreichend verbessert haben. Im 
-Gegensatz zu TD-Methoden erfolgt das Lernen in MC nicht inkrementell, sondern erst am 
-Episode-Ende, was zu deutlich langsamerer Konvergenz führt. Nach 20.000 Episodes zeigt 
-MC eine Greedy Evaluation von nur ~2-4 Return, während SARSA und Q-Learning bereits 
-~9-10 erreichen.
-
-2. WARUM LERNEN SARSA UND Q-LEARNING „ONLINE" SCHNELLER?
-
-TD-Methoden (Temporal Difference) aktualisieren die Q-Werte nach jedem einzelnen Schritt
-innerhalb einer Episode: Q[s][a] ← Q[s][a] + α(r + γV(s') - Q[s][a]). Dies ermöglicht 
-iterative Verbesserungen und schnelle Anpassung an neue Informationen. Der TD-Target 
-(r + γV(s')) ist sofort nach dem ersten Schritt verfügbar, nicht erst am Episode-Ende.
-SARSA (On-Policy) bootstrappt von der aktuellen Policy, Q-Learning (Off-Policy) von der
-optimalen Aktion - beide sind aber wesentlich schneller als MC. Nach ~5-10k Episodes 
-konvergieren SARSA und Q-Learning bereits zu stabilen Policies, während MC noch im 
-negativen Bereich verweilt.
+2. WARUM LERNEN SARSA & Q-LEARNING "ONLINE" SCHNELLER?
+   TD-Methoden (Temporal Difference) updaten die Q-Werte innerhalb einer Episode, nicht erst
+   am Ende.
+   Nach jedem Schritt wird sofort: Q[s][a] ← Q[s][a] + α(r + γV(s') - Q[s][a]) berechnet.
+   Das ermöglicht iterative Verbesserungen und schnelle Anpassung an neue Informationen.
+   Besonders wichtig: Der TD-Target (r + γV(s')) ist sofort verfügbar und wird direkt genutzt,
+   statt am Ende der Episode.
+   SARSA (On-Policy) bootstrappt von der aktuellen Policy, Q-Learning (Off-Policy) von der
+   optimalen Action. Beide sind "online" und schneller als MC.
 
 3. WARUM IST Q-LEARNING OFT AGGRESSIVER (SCHNELLERER ANSTIEG)?
-
-Q-Learning nutzt den maximalen Q-Wert der nächsten Aktion: best_next = max_a Q[s'][a],
-unabhängig davon, welche Aktion die aktuelle Policy exploriert. Dies führt zu 
-aggressiveren, optimistischeren Updates. SARSA bootstrappt hingegen von der tatsächlich 
-gewählten nächsten Aktion der aktuellen Policy: a' ~ π(s'). Wenn die Policy noch 
-suboptimal ist, gibt SARSA konservativere Updates. Q-Learning "sieht" das Optimalitäts-
-Potenzial schneller und passt sich aggressiv an, was zu schnellerem Lernfortschritt führt.
-In den Learning Curves ist klar sichtbar: Q-Learning erreicht nach ~5-6k Episodes bereits 
-Return-Werte von 0-5, während SARSA noch bei -5 bis -10 verweilt.
+   Q-Learning nutzt: best_next = max_a Q[s'][a], egal was die Policy exploriert.
+   Dieser Maximal-Bootstrap macht Q-Learning aggressiver. Selbst wenn die Policy
+   schlechte Aktionen exploriert, lernt Q von der besten möglichen.
+   SARSA bootstrappt von der nächsten Aktion der aktuellen Policy: a' ~ π(s').
+   Wenn die Policy noch schlecht exploriert, gibt SARSA konservativere Updates.
+   Q-Learning "sieht" das Optimal-Potential schneller und adjustiert aggressiv.
+   Beispiel: Nach wenigen Episodes kann Q-Learning bereits 0-5 Return erreichen,
+   während SARSA noch -10 bis -5 ist.
 
 4. WARUM SIND SARSA UND Q-LEARNING AM ENDE ÄHNLICH GUT?
-
-Nach 20.000 Episodes haben beide Methoden ausreichend Daten gesehen, um die Q-Werte zu
-konvergieren. Die Exploration ist am Ende stark reduziert (ε ≈ 0.05), sodass beide 
-Algorithmen ähnlich gute Policies befolgen. Der fundamentale Unterschied zwischen 
-On-Policy Bootstrapping (SARSA) und Off-Policy Bootstrapping (Q-Learning) wird bei 
-Konvergenz irrelevant, da die explorierte Policy sich der optimalen Policy annähert.
-Die Greedy Evaluation zeigt: Beide erreichen ähnliche Mean Returns (~9-11) und Episode 
-Lengths (~10-12 Schritte). Der Hauptvorteil von Q-Learning ist nicht die endgültige 
-Performance, sondern die 40-50% schnellere Konvergenzgeschwindigkeit.
-
-================================================================================
-ZUSAMMENFASSUNG
-================================================================================
-
-Monte Carlo:  Stabiler aber sehr langsam (konvergiert bei ~15k Episodes)
-SARSA:        Schneller und online (konvergiert bei ~8-10k Episodes)
-Q-Learning:   Aggressiv und am schnellsten (konvergiert bei ~5-6k Episodes, 40-50% schneller!)
-
-Paradox: Größerer TD-Fehler ≠ schlechtere Performance
-Q-Learning hat größere TD-Fehler als SARSA, aber lernt schneller und besser.
-Dies zeigt, dass TD-Fehler ein Lern-Signal ist, nicht direkt ein Qualitäts-Maß.
-
-================================================================================
+   Nach 20.000 Episodes haben beide Methoden genug Daten gesehen, um die Q-Werte zu
+   konvergieren.
+   Am Ende ist die Exploration stark reduziert (eps ≈ 0.05), beide folgen ähnlich guten
+   Policies.
+   Der Unterschied zwischen "On-Policy bootstrapping" (SARSA) und "Off-Policy bootstrapping"
+   (Q-Learning) wird irrelevant, wenn beide konvergiert sind.
+   Greedy Evaluation zeigt: Beide erreichen ähnliche Mean Returns (ca. 9-10) und Episode
+   Lengths (ca. 10-12 Steps).
+   Der Hauptvorteil von Q-Learning ist der schnellere Anstieg, nicht die endgültige Performance
+   (bei deterministischen, vollständig-explorierteren Umgebungen).
