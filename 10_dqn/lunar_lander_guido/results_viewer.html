@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DQN vs Double DQN - Results Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+            border-left: 5px solid #4CAF50;
+            padding-left: 15px;
+        }
+        .plot-container {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .plot-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+        }
+        .status {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 5px solid #2196F3;
+        }
+        .info-box {
+            background: #fff3cd;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 5px solid #ffc107;
+        }
+        .success {
+            background: #d4edda;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 5px solid #28a745;
+        }
+        .file-list {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        video {
+            max-width: 800px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        .refresh-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+        }
+        .refresh-btn:hover {
+            background: #45a049;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 DQN vs Double DQN - LunarLander Results</h1>
+
+    <div class="status">
+        <h3>📊 Current Status</h3>
+        <p><strong>Page last loaded:</strong> <span id="timestamp"></span></p>
+        <button class="refresh-btn" onclick="location.reload()">🔄 Refresh Page</button>
+    </div>
+
+    <div class="info-box">
+        <h3>ℹ️ About This Analysis</h3>
+        <p>This page shows results from DQN and Double DQN training on the LunarLander-v3 environment.</p>
+        <p><strong>Key Difference:</strong> Double DQN reduces Q-value overestimation by decoupling action selection from action evaluation.</p>
+        <ul>
+            <li><strong>DQN:</strong> Uses max Q-value directly (biased)</li>
+            <li><strong>Double DQN:</strong> Selects action with online network, evaluates with target network (less biased)</li>
+        </ul>
+    </div>
+
+    <h2>📈 Existing Training Results</h2>
+
+    <div class="plot-container">
+        <h3>Original Training Plot</h3>
+        <p><code>lunarlander_training.png</code> - From the executed notebook 13_DQN_LunarLander.ipynb</p>
+        <img src="lunarlander_training.png" alt="Lunar Lander Training" onerror="this.parentElement.innerHTML='<p style=color:red>❌ Plot not found. Check if lunarlander_training.png exists.</p>'">
+    </div>
+
+    <h2>🎬 Existing Agent Animations (GIFs)</h2>
+
+    <div class="plot-container">
+        <h3>DQN Agent Performance</h3>
+        <p><code>dqn_lunarlander.gif</code> - Trained DQN agent landing</p>
+        <img src="dqn_lunarlander.gif" alt="DQN Landing" style="max-width: 600px;" onerror="this.parentElement.innerHTML='<p style=color:orange>⏳ GIF not found or still generating.</p>'">
+    </div>
+
+    <div class="plot-container">
+        <h3>Double DQN Agent Performance</h3>
+        <p><code>ddqn_lunarlander.gif</code> - Trained Double DQN agent landing</p>
+        <img src="ddqn_lunarlander.gif" alt="Double DQN Landing" style="max-width: 600px;" onerror="this.parentElement.innerHTML='<p style=color:orange>⏳ GIF not found or still generating.</p>'">
+    </div>
+
+    <h2>🆕 New Comprehensive Analysis</h2>
+
+    <div class="success" id="new-plot-status">
+        <p>⏳ <strong>Training in progress...</strong></p>
+        <p>The comprehensive comparison plot will appear below when training completes (~30-40 minutes).</p>
+        <p>Check the terminal output or refresh this page to see updates.</p>
+    </div>
+
+    <div class="plot-container">
+        <h3>Comprehensive DQN vs Double DQN Comparison</h3>
+        <p><code>plots/dqn_vs_double_dqn_comprehensive.png</code></p>
+        <p>This plot shows:</p>
+        <ul>
+            <li><strong>Episode Returns:</strong> Performance over training</li>
+            <li><strong>Overestimation Gap:</strong> KEY METRIC showing DQN bias vs Double DQN correction</li>
+            <li><strong>Q-Values:</strong> Magnitude of Q-value estimates</li>
+            <li><strong>Training Loss:</strong> Learning stability</li>
+            <li><strong>Episode Lengths:</strong> Efficiency improvements</li>
+            <li><strong>Performance Comparison:</strong> Final results and distributions</li>
+        </ul>
+        <img src="plots/dqn_vs_double_dqn_comprehensive.png" alt="Comprehensive Comparison"
+             onerror="this.parentElement.querySelector('#new-plot-status').innerHTML='<p style=color:orange>⏳ Plot not yet generated. Training may still be running.</p>'">
+    </div>
+
+    <h2>🎥 Trained Agent Videos</h2>
+
+    <div class="info-box">
+        <p>Videos show the trained agents performing lunar landings. Watch for differences in behavior between DQN and Double DQN!</p>
+    </div>
+
+    <div class="plot-container">
+        <h3>DQN (No Wind)</h3>
+        <video controls>
+            <source src="videos/dqn_nowind.mp4" type="video/mp4">
+            <p>Video not yet available. Training in progress...</p>
+        </video>
+    </div>
+
+    <div class="plot-container">
+        <h3>Double DQN (No Wind)</h3>
+        <video controls>
+            <source src="videos/doubledqn_nowind.mp4" type="video/mp4">
+            <p>Video not yet available. Training in progress...</p>
+        </video>
+    </div>
+
+    <div class="plot-container">
+        <h3>DQN (With Wind)</h3>
+        <video controls>
+            <source src="videos/dqn_wind.mp4" type="video/mp4">
+            <p>Video not yet available. Training in progress...</p>
+        </video>
+    </div>
+
+    <div class="plot-container">
+        <h3>Double DQN (With Wind)</h3>
+        <video controls>
+            <source src="videos/doubledqn_wind.mp4" type="video/mp4">
+            <p>Video not yet available. Training in progress...</p>
+        </video>
+    </div>
+
+    <h2>📁 Available Files</h2>
+
+    <div class="file-list">
+        <h4>Plots:</h4>
+        <ul>
+            <li>✓ <code>lunarlander_training.png</code> - Original training results (240KB)</li>
+            <li>⏳ <code>plots/dqn_vs_double_dqn_comprehensive.png</code> - Comprehensive comparison (generating...)</li>
+        </ul>
+
+        <h4>Animations (GIFs):</h4>
+        <ul>
+            <li>✓ <code>dqn_lunarlander.gif</code> - DQN agent performance (628KB)</li>
+            <li>✓ <code>ddqn_lunarlander.gif</code> - Double DQN agent performance (424KB)</li>
+        </ul>
+
+        <h4>Videos (MP4 - New Analysis):</h4>
+        <ul>
+            <li>⏳ <code>videos/dqn_nowind.mp4</code> - (generating...)</li>
+            <li>⏳ <code>videos/doubledqn_nowind.mp4</code> - (generating...)</li>
+            <li>⏳ <code>videos/dqn_wind.mp4</code> - (generating...)</li>
+            <li>⏳ <code>videos/doubledqn_wind.mp4</code> - (generating...)</li>
+        </ul>
+
+        <h4>Models:</h4>
+        <ul>
+            <li>⏳ <code>DQN_NoWind_model.pt</code> - (generating...)</li>
+            <li>⏳ <code>DoubleDQN_NoWind_model.pt</code> - (generating...)</li>
+            <li>⏳ <code>DQN_Wind_model.pt</code> - (generating...)</li>
+            <li>⏳ <code>DoubleDQN_Wind_model.pt</code> - (generating...)</li>
+        </ul>
+
+        <h4>Data:</h4>
+        <ul>
+            <li>⏳ <code>quick_results.log</code> - Training progress log</li>
+        </ul>
+    </div>
+
+    <h2>🔍 Understanding the Results</h2>
+
+    <div class="info-box">
+        <h3>What to Look For:</h3>
+        <ol>
+            <li><strong>Overestimation Gap Plot:</strong>
+                <ul>
+                    <li>DQN should show POSITIVE gap (0.5-2.0)</li>
+                    <li>Double DQN should show gap NEAR ZERO</li>
+                    <li>This is the KEY difference proving Double DQN works better</li>
+                </ul>
+            </li>
+            <li><strong>Episode Returns:</strong>
+                <ul>
+                    <li>Both should eventually reach 200+ (environment solved)</li>
+                    <li>Double DQN often learns more stably</li>
+                </ul>
+            </li>
+            <li><strong>Performance Under Wind:</strong>
+                <ul>
+                    <li>Wind makes the task harder</li>
+                    <li>Compare how each algorithm handles disturbances</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <h2>⚙️ Training Commands</h2>
+
+    <div class="file-list">
+        <h4>Currently Running:</h4>
+        <pre>python quick_comparison.py</pre>
+
+        <h4>Check Progress:</h4>
+        <pre>tail -f quick_results.log</pre>
+
+        <h4>Check Status:</h4>
+        <pre>./check_status.sh</pre>
+
+        <h4>Alternative - Interactive Notebook:</h4>
+        <pre>jupyter notebook DQN_vs_DoubleDQN_Comprehensive_Analysis.ipynb</pre>
+    </div>
+
+    <div class="status">
+        <h3>💡 Tips</h3>
+        <ul>
+            <li>Refresh this page periodically to see new results as they're generated</li>
+            <li>Training takes ~30-40 minutes for the quick version (50k steps per agent)</li>
+            <li>Check <code>quick_results.log</code> to see current training progress</li>
+            <li>All plots and videos will appear automatically when ready</li>
+        </ul>
+    </div>
+
+    <script>
+        // Display current timestamp
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Auto-refresh every 2 minutes
+        setTimeout(function() {
+            location.reload();
+        }, 120000);
+    </script>
+</body>
+</html>
+

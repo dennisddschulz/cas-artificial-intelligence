@@ -87,35 +87,19 @@ Zeigt:
 
 ### Gespeichert in: `03_interpretation.txt`
 
-Beantwortet alle 4 Fragen:
+Beantwortet alle 4 Fragen prägnant:
 
-#### 1. **Warum bleibt Monte Carlo lange im negativen Bereich?**
-- MC updatet nur am Ende einer Episode
-- In Taxi-v3: jeder Step = -1 Reward
-- Episodes sind anfangs 10-15 Schritte lang → Returns -10 bis -15
-- MC muss hunderte Episodes sehen, bis Q-Werte verbessert werden
-- Every-Visit Updates sind akkumulativ: braucht viele Iterationen
+#### **Folie 6: Warum bleibt Monte Carlo lange im negativen Bereich?**
+MC updatet nur am Episode-Ende, nicht online wie TD-Methoden. Mit Epsilon-Decay stoppt Exploration zu früh, wodurch MC in suboptimalen Strategien stecken bleibt.
 
-#### 2. **Warum lernen SARSA & Q-Learning "online" schneller?**
-- TD-Methoden updaten innerhalb der Episode (nach jedem Schritt)
-- Sofortige Berechnung: `Q[s][a] ← Q[s][a] + α(r + γV(s') - Q[s][a])`
-- Iterative Verbesserungen ermöglichen schnelle Anpassung
-- Bootstrapping: TD-Target ist sofort verfügbar
-- SARSA nutzt aktuelle Policy, Q-Learning nutzt beste Aktion
+#### **Folie 7: Warum lernen SARSA & Q-Learning "online" schneller?**
+TD-Methoden updaten nach jedem Schritt, nicht nur am Episode-Ende. Sofortiges Feedback ermöglicht kontinuierliche, exponentielle Verbesserung statt episodisches Lernen.
 
-#### 3. **Warum ist Q-Learning oft aggressiver (schnellerer Anstieg)?**
-- Q-Learning: `best_next = max_a Q[s'][a]` (Off-Policy)
-- Nutzt beste mögliche Aktion (unabhängig von aktueller Policy)
-- SARSA: `a' ~ π(s')` (On-Policy) - nutzt tatsächliche nächste Aktion
-- Wenn Policy schlecht exploriert: SARSA konservativ, Q-Learning aggressiv
-- Q-Learning "sieht" Optimal-Potential schneller
+#### **Folie 8: Warum ist Q-Learning oft aggressiver (schnellerer Anstieg)?**
+Q-Learning nutzt `max(Q)` für die nächste Aktion (Off-Policy), während SARSA die tatsächlich ausgeführte Aktion nutzt (On-Policy). Dies führt zu optimistischeren Zielwerten und schnellerem Anstieg.
 
-#### 4. **Warum sind SARSA und Q-Learning am Ende ähnlich gut?**
-- Nach 20.000 Episodes: beide haben konvergiert
-- Exploration gegen Ende sehr reduziert (eps ≈ 0.05)
-- Beide folgen ähnlich guten Policies
-- On-Policy vs Off-Policy Unterschied wird irrelevant bei Konvergenz
-- Greedy Eval zeigt: ähnliche Mean Returns (9-10) und Lengths (10-12)
+#### **Folie 9: Warum sind SARSA und Q-Learning am Ende ähnlich gut?**
+Nach 20.000 Episoden haben beide konvergiert zur quasi-optimalen Policy; der On-/Off-Policy-Unterschied wird bei ausreichender Exploration irrelevant.
 
 ---
 

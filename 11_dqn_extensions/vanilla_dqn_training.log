@@ -1,0 +1,108 @@
+Error processing line 1 of /home/isc-den/software/mniconda3/lib/python3.11/site-packages/distutils-precedence.pth:
+
+  Traceback (most recent call last):
+    File "<frozen site>", line 195, in addpackage
+    File "<string>", line 1, in <module>
+  ModuleNotFoundError: No module named '_distutils_hack'
+
+Remainder of file ignored
+Device: cpu
+================================================================================
+VANILLA DQN COMPARISON: Uniform Replay vs. PER
+================================================================================
+Configuration:
+  Total Steps: 300,000
+  Batch Size: 256
+  Buffer Size: 200,000
+  Learning Rate: 0.002
+  Extensions: NONE (USE_DOUBLE=False, USE_DUELING=False, USE_NOISY=False)
+================================================================================
+
+================================================================================
+Starting Training: Uniform Replay (Baseline)
+================================================================================
+Device: cpu
+USE_PER: False
+USE_DOUBLE: False, USE_DUELING: False, USE_NOISY: False
+Network architecture:
+QNetwork(
+  (net): Sequential(
+    (0): Linear(in_features=8, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=4, bias=True)
+  )
+)
+[Step   15000] Return:  -106.2 ±   39.3 | Buffer:   15000 | Loss: 8.8564
+[Step   30000] Return:  -121.4 ±   94.1 | Buffer:   30000 | Loss: 39.4859
+[Step   45000] Return:   132.4 ±  123.9 | Buffer:   45000 | Loss: 32.8255
+[Step   60000] Return:    59.8 ±  193.4 | Buffer:   60000 | Loss: 26.7861
+[Step   75000] Return:   180.8 ±  103.5 | Buffer:   75000 | Loss: 5.7611
+[Step   90000] Return:    95.6 ±  148.6 | Buffer:   90000 | Loss: 14.0399
+[Step  105000] Return:   228.1 ±   51.8 | Buffer:  105000 | Loss: 25.8929
+[Step  120000] Return:    97.4 ±  170.0 | Buffer:  120000 | Loss: 23.6004
+[Step  135000] Return:   129.1 ±  110.3 | Buffer:  135000 | Loss: 9.8584
+[Step  150000] Return:   273.0 ±   26.9 | Buffer:  150000 | Loss: 10.4288
+[Step  165000] Return:   280.8 ±   20.8 | Buffer:  165000 | Loss: 7.4211
+[Step  180000] Return:    84.8 ±  124.5 | Buffer:  180000 | Loss: 34.6264
+[Step  195000] Return:   118.9 ±  116.0 | Buffer:  195000 | Loss: 60.9934
+[Step  210000] Return:   156.6 ±  179.7 | Buffer:  200000 | Loss: 16.5252
+[Step  225000] Return:   -39.0 ±   27.5 | Buffer:  200000 | Loss: 31367.4297
+[Step  240000] Return:  -146.7 ±   45.5 | Buffer:  200000 | Loss: 31.6017
+[Step  255000] Return:  -121.8 ±  107.4 | Buffer:  200000 | Loss: 1097.3362
+[Step  270000] Return:   -42.0 ±  137.9 | Buffer:  200000 | Loss: 622988.3125
+[Step  285000] Return:  -152.8 ±   46.7 | Buffer:  200000 | Loss: 29395.2129
+[Step  300000] Return:  -251.6 ±  104.3 | Buffer:  200000 | Loss: 16536.7012
+
+Uniform Replay (Baseline) - FINAL RESULTS:
+  Final Return: -251.6 ± 104.3
+  Max Return:   280.8
+  Mean Return:  42.8 ± 151.0
+
+================================================================================
+Starting Training: Prioritized Experience Replay
+================================================================================
+Device: cpu
+USE_PER: True
+USE_DOUBLE: False, USE_DUELING: False, USE_NOISY: False
+Network architecture:
+QNetwork(
+  (net): Sequential(
+    (0): Linear(in_features=8, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=4, bias=True)
+  )
+)
+[Step   15000] Return:  -231.9 ±   88.5 | Buffer:   15000 | Loss: 1188.9039
+[Step   30000] Return:  -281.6 ±  163.8 | Buffer:   30000 | Loss: 2542.3533
+[Step   45000] Return:  -189.9 ±   91.0 | Buffer:   45000 | Loss: 1908.4335
+[Step   60000] Return:  -333.0 ±  103.1 | Buffer:   60000 | Loss: 559.9855
+[Step   75000] Return:  -250.5 ±  108.6 | Buffer:   75000 | Loss: 468.9999
+[Step   90000] Return:  -370.5 ±  131.5 | Buffer:   90000 | Loss: 276.3085
+[Step  105000] Return:  -198.5 ±   87.5 | Buffer:  105000 | Loss: 332.0379
+[Step  120000] Return:  -301.5 ±  167.6 | Buffer:  120000 | Loss: 168.2304
+[Step  135000] Return:  -311.4 ±   96.3 | Buffer:  135000 | Loss: 82.3770
+[Step  150000] Return:  -305.0 ±  106.3 | Buffer:  150000 | Loss: 52.5338
+Traceback (most recent call last):
+  File "/home/isc-den/cas-artificial-intelligence/11_dqn_extensions/train_vanilla_dqn.py", line 457, in <module>
+    results_per = run_training(use_per=True, config_name="Prioritized Experience Replay")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/cas-artificial-intelligence/11_dqn_extensions/train_vanilla_dqn.py", line 405, in run_training
+    loss = train_step(step, q_online, q_target, optimizer, buffer, use_per)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/cas-artificial-intelligence/11_dqn_extensions/train_vanilla_dqn.py", line 263, in train_step
+    (s, a, r, s2, done), idxs, weights = buffer.sample(BATCH_SIZE, beta=beta)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/cas-artificial-intelligence/11_dqn_extensions/train_vanilla_dqn.py", line 201, in sample
+    return ReplayBuffer._to_tensors(batch), idxs, weights_t
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/cas-artificial-intelligence/11_dqn_extensions/train_vanilla_dqn.py", line 108, in _to_tensors
+    s  = torch.tensor(np.array([b.s for b in batch]), dtype=torch.float32, device=device)
+                               ^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/cas-artificial-intelligence/11_dqn_extensions/train_vanilla_dqn.py", line 108, in <listcomp>
+    s  = torch.tensor(np.array([b.s for b in batch]), dtype=torch.float32, device=device)
+                                ^^^
+AttributeError: 'NoneType' object has no attribute 's'

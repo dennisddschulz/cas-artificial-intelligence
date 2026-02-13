@@ -1,0 +1,105 @@
+Error processing line 1 of /home/isc-den/software/mniconda3/lib/python3.11/site-packages/distutils-precedence.pth:
+
+  Traceback (most recent call last):
+    File "<frozen site>", line 195, in addpackage
+    File "<string>", line 1, in <module>
+  ModuleNotFoundError: No module named '_distutils_hack'
+
+Remainder of file ignored
+Using device: cpu
+
+
+================================================================================
+VERIFICATION: PER vs. Uniform Replay
+================================================================================
+Configuration:
+  Total Steps: 300,000
+  Batch Size: 256
+  Buffer Size: 200,000
+  Learning Rate: 0.002
+  PER Alpha: 0.6
+  Device: cpu
+================================================================================
+
+================================================================================
+Starting Training: Uniform Replay
+================================================================================
+[Step   15000] Return:  -163.7 ±   63.2 | Buffer:  15000
+[Step   30000] Return:   -11.2 ±  106.6 | Buffer:  30000
+[Step   45000] Return:  -187.8 ±  151.0 | Buffer:  45000
+[Step   60000] Return:  -442.1 ±  169.8 | Buffer:  60000
+[Step   75000] Return:  -346.9 ±   57.6 | Buffer:  75000
+[Step   90000] Return:  -488.1 ±   91.1 | Buffer:  90000
+[Step  105000] Return:  -646.1 ±   47.9 | Buffer: 105000
+[Step  120000] Return:  -615.0 ±  102.6 | Buffer: 120000
+[Step  135000] Return:  -642.4 ±  154.4 | Buffer: 135000
+[Step  150000] Return:  -379.7 ±  104.0 | Buffer: 150000
+[Step  165000] Return:  -504.2 ±   32.2 | Buffer: 165000
+[Step  180000] Return:  -570.6 ±   51.6 | Buffer: 180000
+[Step  195000] Return:  -591.0 ±   48.9 | Buffer: 195000
+[Step  210000] Return:  -521.5 ±   25.5 | Buffer: 200000
+[Step  225000] Return:  -493.1 ±   48.1 | Buffer: 200000
+[Step  240000] Return:  -556.4 ±   39.5 | Buffer: 200000
+[Step  255000] Return:  -508.2 ±   33.2 | Buffer: 200000
+[Step  270000] Return:  -468.7 ±   41.3 | Buffer: 200000
+[Step  285000] Return:  -471.9 ±   43.3 | Buffer: 200000
+[Step  300000] Return:  -359.2 ±   18.7 | Buffer: 200000
+
+Uniform Replay - FINAL RESULTS:
+  Final Return: -359.2 ± 18.7
+  Max Return:   -11.2
+  Mean Return:  -448.4 ± 163.0
+
+================================================================================
+Starting Training: Prioritized Experience Replay
+================================================================================
+[Step   15000] Return:  -253.2 ±  231.6 | Buffer:  15000
+[Step   30000] Return:  -198.5 ±   53.2 | Buffer:  30000
+[Step   45000] Return:  -324.7 ±   32.2 | Buffer:  45000
+[Step   60000] Return:  -522.2 ±   64.1 | Buffer:  60000
+[Step   75000] Return:  -475.5 ±  222.5 | Buffer:  75000
+[Step   90000] Return:  -455.4 ±  145.4 | Buffer:  90000
+[Step  105000] Return:  -316.6 ±   69.6 | Buffer: 105000
+[Step  120000] Return:  -290.9 ±   51.5 | Buffer: 120000
+[Step  135000] Return:  -302.7 ±   91.4 | Buffer: 135000
+[Step  150000] Return:  -278.3 ±  127.3 | Buffer: 150000
+[Step  165000] Return:  -282.7 ±  131.1 | Buffer: 165000
+[Step  180000] Return:  -375.0 ±  104.9 | Buffer: 180000
+[Step  195000] Return:  -229.3 ±   99.2 | Buffer: 195000
+[Step  210000] Return:  -252.6 ±   54.3 | Buffer: 200000
+[Step  225000] Return:  -365.6 ±  100.7 | Buffer: 200000
+[Step  240000] Return:  -268.6 ±   98.2 | Buffer: 200000
+[Step  255000] Return:  -256.1 ±   60.0 | Buffer: 200000
+[Step  270000] Return:  -354.1 ±  147.3 | Buffer: 200000
+[Step  285000] Return:  -271.6 ±   57.6 | Buffer: 200000
+[Step  300000] Return:  -211.9 ±   24.8 | Buffer: 200000
+
+Prioritized Experience Replay - FINAL RESULTS:
+  Final Return: -211.9 ± 24.8
+  Max Return:   -198.5
+  Mean Return:  -314.3 ± 85.5
+
+================================================================================
+COMPARISON RESULTS
+================================================================================
+
+Final Performance:
+  Uniform: -359.2 ± 18.7
+  PER:     -211.9 ± 24.8
+  Difference: +147.3
+
+Mean Return (over all evaluations):
+  Uniform: -448.4 ± 163.0
+  PER:     -314.3 ± 85.5
+
+Max Return:
+  Uniform: -11.2
+  PER:     -198.5
+
+T-Test:
+  t-statistic: 3.1773
+  p-value: 0.002950
+  Significant? True
+
+✓ Results saved to: /home/isc-den/cas-artificial-intelligence/11_dqn_extensions/results_verification.json
+================================================================================
