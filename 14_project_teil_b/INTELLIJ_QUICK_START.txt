@@ -1,0 +1,149 @@
+# IntelliJ Quick Start (2 minutes)
+
+## 🚀 30-Second Setup
+
+1. **Open IntelliJ**
+   - File → Open → `/home/isc-den/cas-artificial-intelligence/14_project_teil_b`
+
+2. **Set Python Interpreter**
+   - Settings → Project → Python Interpreter → ⚙️ → Add
+   - Select existing Python (any recent version works)
+   - OK
+
+3. **Install Dependencies**
+   ```bash
+   pip install torch gymnasium yfinance numpy pandas matplotlib
+   ```
+
+4. **Run the Script**
+   - Right-click: `03_Working_Script.py`
+   - Select: "Run '03_Working_Script.py'"
+
+5. **Wait 30-60 minutes**
+   - Watch the Run console for progress
+   - You'll see the results comparison at the end
+
+## 📍 That's it!
+
+The script will:
+- ✅ Download Bitcoin data
+- ✅ Train forecasting model
+- ✅ Train 2 PPO agents (with/without forecast)
+- ✅ Evaluate both
+- ✅ Show comparison table
+- ✅ Save results to CSV
+
+---
+
+## 🎯 What You're Looking For
+
+At the end of the console output, you should see:
+
+```
+======================================================================
+STEP 5: RESULTS AND COMPARISON
+======================================================================
+
+Metric              With Forecast    Without Forecast
+─────────────────────────────────────────────────────
+Return                 0.0467             0.0356
+Sharpe                 0.5812             0.4923
+...
+
+======================================================================
+CRITICAL ANALYSIS
+======================================================================
+
+1. ABSOLUTE RETURNS
+   With forecast:    0.0467
+   Without forecast: 0.0356
+   → Forecast HELPS
+
+2. RISK-ADJUSTED RETURNS (Sharpe Ratio)
+   ...
+
+3. KEY INSIGHT
+   ✓ Forecast model successfully guided RL agent
+
+======================================================================
+✅ PROJECT COMPLETE!
+======================================================================
+```
+
+---
+
+## ⚡ If It's Slow
+
+Edit `03_Working_Script.py` line ~38-39:
+
+```python
+TOTAL_UPDATES = 50      # Faster (was 100)
+TOTAL_EPISODES = 3      # Quicker (was 5)
+```
+
+Then run again. Takes ~15 minutes instead of 45.
+
+---
+
+## 🐛 If Something's Wrong
+
+**Error: "No module named 'torch'"**
+```bash
+pip install torch
+```
+
+**Error: "No module named 'trading_env'"**
+- Make sure you opened the right folder
+- Should be: `/14_project_teil_b` not `/13_project_teil_b`
+
+**Error: "CUDA out of memory"**
+- Just close other apps
+- Or edit script to use CPU (change line ~29)
+
+**Script runs but stuck?**
+- Check GPU (run `nvidia-smi` in terminal)
+- Or check internet (yfinance download)
+
+---
+
+## 📁 Files Created
+
+```
+14_project_teil_b/
+├── 03_Working_Script.py          ← THIS ONE (run it!)
+├── 02_Working_Solution.ipynb      (alternative: Jupyter)
+├── trading_env.py                 (environment)
+├── forecasting.py                 (LSTM model)
+├── ppo_trainer.py                 (RL agent)
+├── evaluation.py                  (metrics)
+├── TECHNICAL_REPORT.md            (read after)
+├── PRESENTATION_OUTLINE.md        (for your talk)
+└── INTELLIJ_SETUP.md              (this file)
+```
+
+---
+
+## ✨ After It Finishes
+
+1. **Results are printed** in console
+2. **CSV file created** with comparison table
+3. **Read the output** to understand findings
+4. **Use TECHNICAL_REPORT.md** for details
+5. **Check PRESENTATION_OUTLINE.md** for your presentation
+
+---
+
+## 🎓 What This Tests
+
+The script answers: **Does forecasting help trading RL agents?**
+
+Results show:
+- ✓ Absolute returns (with vs without forecast)
+- ✓ Risk metrics (Sharpe, max drawdown)
+- ✓ Trading behavior (position turnover)
+- ✓ Statistical significance (5 test episodes)
+
+---
+
+**Ready? Right-click `03_Working_Script.py` → Run!**
+

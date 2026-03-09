@@ -1,0 +1,87 @@
+Error processing line 1 of /home/isc-den/software/mniconda3/lib/python3.11/site-packages/distutils-precedence.pth:
+
+  Traceback (most recent call last):
+    File "<frozen site>", line 195, in addpackage
+    File "<string>", line 1, in <module>
+  ModuleNotFoundError: No module named '_distutils_hack'
+
+Remainder of file ignored
+
+======================================================================
+FINAL PROJECT - CLEAN VERSION
+======================================================================
+Started: 20:33:51
+Device: cpu
+
+[PART 1] Loading data...
+✓ Loaded 710 days (Train: 568, Test: 142)
+
+[PART 2] Training N-BEATS forecaster...
+  Epoch 10/50 | Loss: 0.000932
+  Epoch 20/50 | Loss: 0.000872
+  Epoch 30/50 | Loss: 0.000821
+  Epoch 40/50 | Loss: 0.000776
+  Epoch 50/50 | Loss: 0.000722
+✓ Forecaster trained
+  Train forecasts: 548 values
+  Test forecasts: 122 values
+✓ Forecasts added
+
+[PART 3] Training PPO agents...
+
+[PPO] Training WITH forecast (100 episodes)...
+[PPO] Actual obs dim: 15
+  Episode  20/100 | Mean reward:   -3188.21
+  Episode  40/100 | Mean reward:   -2866.05
+  Episode  60/100 | Mean reward:   -8157.50
+  Episode  80/100 | Mean reward:   -4671.44
+  Episode 100/100 | Mean reward:   -6319.10
+
+[PPO] Training WITHOUT forecast (100 episodes)...
+[PPO] Actual obs dim: 14
+  Episode  20/100 | Mean reward:    -195.99
+  Episode  40/100 | Mean reward:   -8209.85
+  Episode  60/100 | Mean reward:   -5354.45
+  Episode  80/100 | Mean reward:   -1208.96
+  Episode 100/100 | Mean reward:   -3845.23
+
+[PART 4] Evaluation...
+Evaluating WITH forecast (5 episodes)...
+  E1: Return=-0.0069, Sharpe=-11.1247
+  E2: Return=-0.0069, Sharpe=-11.1247
+  E3: Return=-0.0069, Sharpe=-11.1247
+  E4: Return=-0.0069, Sharpe=-11.1247
+  E5: Return=-0.0069, Sharpe=-11.1247
+Evaluating WITHOUT forecast (5 episodes)...
+  E1: Return=-0.0092, Sharpe=-6.3803
+  E2: Return=-0.0092, Sharpe=-6.3803
+  E3: Return=-0.0092, Sharpe=-6.3803
+  E4: Return=-0.0092, Sharpe=-6.3803
+  E5: Return=-0.0092, Sharpe=-6.3803
+
+======================================================================
+RESULTS
+======================================================================
+
+
+    Metric With Forecast Without Forecast
+    Return       -0.0069          -0.0092
+    Sharpe      -11.1247          -6.3803
+    Max DD       -0.0080          -0.0142
+Volatility        0.0047           0.0089
+  Win Rate        0.4429           0.4857
+
+✓ Saved: final_project_results.csv
+
+======================================================================
+ANALYSIS
+======================================================================
+
+Does forecast help?
+  Return: -0.0069 vs -0.0092 (+0.0022)
+  Sharpe: -11.1247 vs -6.3803 (-4.7443)
+
+⚠️  LIMITED - Baseline performs similarly or better
+
+✅ PROJECT COMPLETE!
+Finished: 20:35:30

@@ -1,0 +1,75 @@
+nohup: ignoring input
+Error processing line 1 of /home/isc-den/software/mniconda3/lib/python3.11/site-packages/distutils-precedence.pth:
+
+  Traceback (most recent call last):
+    File "<frozen site>", line 195, in addpackage
+    File "<string>", line 1, in <module>
+  ModuleNotFoundError: No module named '_distutils_hack'
+
+Remainder of file ignored
+
+======================================================================
+FINAL PROJECT - CLEAN VERSION
+======================================================================
+Started: 20:24:27
+Device: cpu
+
+[PART 1] Loading data...
+✓ Loaded 710 days (Train: 568, Test: 142)
+
+[PART 2] Training N-BEATS forecaster...
+  Epoch 10/50 | Loss: 0.000932
+  Epoch 20/50 | Loss: 0.000872
+  Epoch 30/50 | Loss: 0.000821
+  Epoch 40/50 | Loss: 0.000776
+  Epoch 50/50 | Loss: 0.000722
+✓ Forecaster trained
+  Train forecasts: 548 values
+  Test forecasts: 122 values
+✓ Forecasts added
+
+[PART 3] Training PPO agents...
+
+[PPO] Training WITH forecast...
+Traceback (most recent call last):
+  File "/home/isc-den/software/mniconda3/lib/python3.11/site-packages/pandas/core/indexes/range.py", line 413, in get_loc
+    return self._range.index(new_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: 568 is not in range
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/isc-den/cas-artificial-intelligence/14_project_teil_b/09_CLEAN_FINAL_PROJECT.py", line 220, in <module>
+    if (update + 1) % 20 == 0:
+              ^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/cas-artificial-intelligence/14_project_teil_b/09_CLEAN_FINAL_PROJECT.py", line 207, in train_agent
+    a = squash_action(dist.sample(), -2.0, 2.0)
+                                ^^^^^^^^^^^^^^^^
+  File "/home/isc-den/cas-artificial-intelligence/14_project_teil_b/trading_env.py", line 246, in step
+    return self._get_obs(), float(reward), terminated, truncated, info
+           ^^^^^^^^^^^^^^^
+  File "/home/isc-den/cas-artificial-intelligence/14_project_teil_b/trading_env.py", line 118, in _get_obs
+    market_features = self.df.loc[self.t, self.feature_cols].values.astype(np.float32)
+                      ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/software/mniconda3/lib/python3.11/site-packages/pandas/core/indexing.py", line 1185, in __getitem__
+    return self._getitem_tuple(key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/software/mniconda3/lib/python3.11/site-packages/pandas/core/indexing.py", line 1369, in _getitem_tuple
+    return self._getitem_lowerdim(tup)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/software/mniconda3/lib/python3.11/site-packages/pandas/core/indexing.py", line 1066, in _getitem_lowerdim
+    section = self._getitem_axis(key, axis=i)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/software/mniconda3/lib/python3.11/site-packages/pandas/core/indexing.py", line 1432, in _getitem_axis
+    return self._get_label(key, axis=axis)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/software/mniconda3/lib/python3.11/site-packages/pandas/core/indexing.py", line 1382, in _get_label
+    return self.obj.xs(label, axis=axis)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/software/mniconda3/lib/python3.11/site-packages/pandas/core/generic.py", line 4323, in xs
+    loc = index.get_loc(key)
+          ^^^^^^^^^^^^^^^^^^
+  File "/home/isc-den/software/mniconda3/lib/python3.11/site-packages/pandas/core/indexes/range.py", line 415, in get_loc
+    raise KeyError(key) from err
+KeyError: 568
