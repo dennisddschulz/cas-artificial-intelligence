@@ -9,6 +9,8 @@
 
 set -e
 
+export WANDB_API_KEY='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'
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SKIP_NOTEBOOK=${1:-""}
 
